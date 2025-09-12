@@ -9,6 +9,11 @@ FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfcRAt79uDrsDPHEc-9yrDdR6XG
 
 # ------------------ CSS cho đĩa than ------------------
 ui.add_head_html("""
+<script>
+    // chạy ngay khi browser load lại trang
+    localStorage.clear();
+    sessionStorage.clear();
+</script>
 <style>
 .vinyl-disc {
     width: 50vmin;       /* chiều rộng = 50% của chiều nhỏ nhất màn hình (width hoặc height) */
