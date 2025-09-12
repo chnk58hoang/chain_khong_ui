@@ -367,9 +367,12 @@ def search_songs():
 @app.on_connect
 def reset_session(client):
     # clear search + nhạc (như đã bàn ở trên)
+    search_input.set_value('')
     results_container.clear()
     song_title_label.set_text('')
     artist_label.set_text('')
+    album_cover_img.set_source('')
+    album_cover_img.update()
     # gắn lại upload js cho tab mới
     setup_upload_js()
 
