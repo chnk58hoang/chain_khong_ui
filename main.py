@@ -1,4 +1,4 @@
-from nicegui import ui
+from nicegui import ui, app
 import requests
 import os
 
@@ -80,8 +80,8 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
             .style('''
                 border-radius: 9999px;   /* pill shape */
                 border: none;
-                background: #2a2a2a;
-                color: white;
+                background: white;
+                color: black;
                 font-size: 14px;
                 padding: 10px 16px 10px 36px; /* chừa chỗ cho icon */
                 width: 100%;
@@ -274,7 +274,7 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
 
         image_urls = [os.path.join('collections', img) for img in os.listdir('collections')]
         ui.label('GALLERY').style('margin-top:30px;font-size:18px;font-weight:bold;text-align:center;')
-        gallery_grid = ui.grid().style(
+        gallery_grid = ui.grid().classes('grid-cols-2 gap-2 w-full').style(
             '''
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             gap: 10px;
@@ -364,6 +364,14 @@ def search_songs():
                     # Nút play preview + update ảnh đĩa
                     # ui.button('▶️', on_click=lambda preview=preview, cover=album_cover, title=title, artist=artist: play_song(preview, cover, title, artist))
 
-search_input.on('change', lambda e: search_songs())
+@app.on_connect
+def reset_session(client):
+    # clear search + nhạc (như đã bàn ở trên)
+    results_container.clear()
+    song_title_label.set_text('')
+    artist_label.set_text('')
+    # gắn lại upload js cho tab mới
+    setup_upload_js()
 
+search_input.on('change', lambda e: search_songs())
 ui.run(title='Chain Không')
