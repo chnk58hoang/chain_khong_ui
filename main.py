@@ -366,4 +366,4 @@ def search_songs():
 
 search_input.on('change', lambda e: search_songs())
 
-ui.run()
+ui.run(title='Chain Không')
