@@ -3,6 +3,8 @@ import requests
 import os
 
 
+FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfcRAt79uDrsDPHEc-9yrDdR6XGPJiuqo5PIUe2Oy4fUiI5MA/viewform?pli=1'
+
 
 
 # ------------------ CSS cho đĩa than ------------------
@@ -70,21 +72,29 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
             height: auto;
             position: relative;
         ''')
+        with ui.input('', placeholder='Pick your vibe ...') as search_input:
+            ui.icon('search').style('color: #b3b3b3; margin-left: 8px;') \
+                .props('size=18px') \
+                .on('click', lambda: print('Search clicked!'))
+        search_input \
+            .style('''
+                border-radius: 9999px;   /* pill shape */
+                border: none;
+                background: #2a2a2a;
+                color: white;
+                font-size: 14px;
+                padding: 10px 16px 10px 36px; /* chừa chỗ cho icon */
+                width: 100%;
+                box-shadow: none;
+                transition: background 0.3s ease;
+            ''') \
+            .classes('focus:outline-none') \
+            .props('clearable')
 
-        ui.label('Pick your vibe').style('font-size:22px;margin-top:15px;')
-        search_input = ui.input('', placeholder='Tìm nhạc...').style(
-            '''
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            border-radius: 12px;
-            border: none;
-            background: rgba(255,255,255,0.15);
-            color: white;
-            font-size: 12px;
-            outline: none;
-            '''
-        ).props('clearable')
+        # Hover và Focus hiệu ứng
+        search_input.add_slot('append', '')  # trick để có class hover
+        search_input.classes('hover:bg-[#3a3a3a] focus:bg-[#3a3a3a]')
+
         results_container = ui.column().style(
         '''
         margin-top: 10px;
@@ -113,8 +123,8 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
             </div>
         ''')
 
-        song_title_label = ui.label('I Miss Those Days').style('font-weight:bold;font-size:16px; text-align:center;')
-        artist_label = ui.label('Bleachers').style('color:gray;font-size:14px; text-align:center;')
+        song_title_label = ui.label('').style('font-weight:bold;font-size:20px; text-align:center;')
+        artist_label = ui.label('').style('color:gray;font-size:18px; text-align:center;')
         with ui.card().style(
             '''
             width:90%;
@@ -155,14 +165,8 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
             )
 
             with ui.row().style('justify-content:center;align-items:center;margin-top:10px;gap:20px;width:100%;'):
-                ui.icon('skip_previous').style(
-                    'color:black;background-color:white;border-radius:50%;padding:12px;font-size:30px;box-shadow:0 3px 8px rgba(0,0,0,0.15);cursor:pointer;'
-                )
                 play_btn = ui.icon('play_arrow').style(
                     'color:white;background-color:#1db954;border-radius:50%;padding:15px;font-size:36px;box-shadow:0 3px 12px rgba(0,0,0,0.2);cursor:pointer;'
-                )
-                ui.icon('skip_next').style(
-                    'color:black;background-color:white;border-radius:50%;padding:12px;font-size:30px;box-shadow:0 3px 8px rgba(0,0,0,0.15);cursor:pointer;'
                 )
 
                 def toggle_spin():
@@ -215,9 +219,6 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
                     """
                     ui.run_javascript(js_code)
 
-
-
-                
                 play_btn.on('click', toggle_play)
                 play_btn.on('click', toggle_spin)
 
@@ -271,17 +272,14 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
 
         ui.timer(0.1, setup_upload_js, once=True)
 
-        ui.label('ORDER NOW!').style('margin-top:30px;font-size:18px;font-weight:bold;text-align:center;')
-        ui.image('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Keychain_with_keys.jpg/320px-Keychain_with_keys.jpg')\
-            .style('width:150px;border-radius:20px;box-shadow:0 5px 15px rgba(0,0,0,0.2);margin-top:20px;')
         image_urls = [os.path.join('collections', img) for img in os.listdir('collections')]
         ui.label('GALLERY').style('margin-top:30px;font-size:18px;font-weight:bold;text-align:center;')
         gallery_grid = ui.grid().style(
-        '''
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-        gap: 10px;
-        '''
-    )
+            '''
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            '''
+        )
         for url in image_urls:
             with gallery_grid:
                 small_img = ui.image(url).style(
@@ -303,6 +301,13 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
                 dlg.open()  # hiển thị dialog
 
             small_img.on('click', show_large_image)
+        ui.button('ORDER NOW !', on_click=lambda: ui.run_javascript(f'window.open("{FORM_URL}", "_blank")')).style(
+            '''
+            background-color:white;color:#ff6f91;
+            border-radius:15px;padding:10px 20px;
+            font-weight:bold;cursor:pointer;
+            '''
+        )
 
 
 def play_song(preview, cover, title, artist):
