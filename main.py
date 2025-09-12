@@ -45,6 +45,16 @@ ui.add_head_html("""
     position: absolute;
     z-index: 3;
 }
+.record-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+}
 .spin {
     animation: spin 4s linear infinite;
 }
@@ -59,12 +69,13 @@ ui.add_head_html("""
 state = {'spinning': False, 'audio_playing': False}
 
 # ------------------ UI chính ------------------
-with ui.row().style('width:100%;height:100vh;gap:10px;'):
+with ui.row().style('width:100%;height:100vh;gap:10px;align-items: stretch;'):
 
     # Sidebar trái: search nhạc Spotify
     with ui.column().style(
         '''
-        width:25%;
+        width:33%;
+        min-height:100vh;
         padding:25px;
         background: linear-gradient(145deg,#3b5998,#8b9dc3);
         color:white;
@@ -72,10 +83,16 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
         '''
     ):
         ui.image('images/chainkhonglogo-05_1.png').style('''
-            width: 90%;
+            width: 70%;
+            height: auto;
+            position: relative;
+        ''')
+        ui.image('images/chainkhongpickyourvibe-05.png').style('''
+            width: 50%;
             max-width: 400px;
             height: auto;
             position: relative;
+            transform: translateX(20%);                                                                            
         ''')
         with ui.input('', placeholder='Pick your vibe ...') as search_input:
             ui.icon('search').style('color: #b3b3b3; margin-left: 8px;') \
@@ -83,7 +100,7 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
                 .on('click', lambda: print('Search clicked!'))
         search_input \
             .style('''
-                border-radius: 9999px;   /* pill shape */
+                border-radius: 100px;   /* pill shape */
                 border: none;
                 background: white;
                 color: black;
@@ -96,15 +113,12 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
             .classes('focus:outline-none') \
             .props('clearable')
 
-        # Hover và Focus hiệu ứng
-        search_input.add_slot('append', '')  # trick để có class hover
-        search_input.classes('hover:bg-[#3a3a3a] focus:bg-[#3a3a3a]')
 
         results_container = ui.column().style(
         '''
         margin-top: 10px;
-        gap: 10px;
-        height: calc(100vh - 100px); /* để vừa với column và search */
+        gap: 0px;
+        width: 100%;
         overflow-y: auto;
         '''
     )
@@ -113,10 +127,11 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
     # Center: đĩa than + music player
     with ui.column().style(
         '''
-        width:50%;
+        width:33%;
+        min-height:100vh;
         align-items:center;
         padding:25px;
-        background-color:#f9f9f9;
+        background: linear-gradient(145deg,#3b5998,#8b9dc3);
         border-radius:20px;
         box-shadow:0 10px 20px rgba(0,0,0,0.1);
         '''
@@ -129,14 +144,13 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
         ''')
 
         song_title_label = ui.label('').style('font-weight:bold;font-size:20px; text-align:center;')
-        artist_label = ui.label('').style('color:gray;font-size:18px; text-align:center;')
+        artist_label = ui.label('').style('color:white;font-size:18px; text-align:center;')
         with ui.card().style(
             '''
             width:90%;
             padding:40px 20px;
             border-radius:20px;
             box-shadow:0 5px 15px rgba(0,0,0,0.1);
-            background-image: url("images/chainkhongmascot-02.png");  /* ảnh logo fill */
             background-size: cover;
             background-position: center;
             display:flex;
@@ -230,19 +244,20 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
     # Sidebar phải: upload ảnh cá nhân
     with ui.column().style(
         '''
-        width:20%;
+        width:30%;
+        min-height:100vh;
         padding:25px;
-        background:linear-gradient(145deg,#ff9a9e,#fad0c4);
+        background: linear-gradient(145deg,#3b5998,#8b9dc3);
         color:white;
         border-radius:20px;
         '''
     ):
-        ui.label('Thả "mây ký ức" của bạn vào đây').style('''
-            font-size:20px;
-            text-align:center;
-            margin-bottom:20px;
-            font-family: 'Dancing Script', cursive;
-            font-weight: 700;
+        ui.image('images/chainkhongmaykyuc.png').style('''
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            position: relative;
+            margin-bottom: 20px;
         ''')
 
         ui.html('<input type="file" id="uploadInput" style="display:none;">')
@@ -313,6 +328,13 @@ with ui.row().style('width:100%;height:100vh;gap:10px;'):
             font-weight:bold;cursor:pointer;
             '''
         )
+        ui.image('images/daychuyen.png').style('''
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            position: relative;
+            transform: translate(20%, -15%);                                                                                                            
+        ''')
 
 
 def play_song(preview, cover, title, artist):
