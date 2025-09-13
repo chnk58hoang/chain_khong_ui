@@ -44,19 +44,11 @@ ui.add_head_html("""
     border-radius: 50%;
     position: absolute;
     z-index: 3;
+    object-fit: cover; /* giữ ảnh không méo */
 }
-.record-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 5;
-}
+                 
 .spin {
-    animation: spin 4s linear infinite;
+    animation: spin 10s linear infinite;
 }
 @keyframes spin {
   0% { transform: rotate(0deg); }
